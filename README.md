@@ -8,10 +8,17 @@
 
 Запуск на Linux:
 
+Для запуска необходимо указать через пробел путь к файлу в формате JSON и параметр:
+
+* `max` - для вывода самого большого бара
+* `min` - для вывода самого маленького бара
+* `closest` - для вывода ближайшего бара, для параметра `closest` дополнительно необходимо ввести координаты через пробел долготу и широту
+
+Пример вывода ближайшего бара (параметр `closest` и координаты долгота `37` широта `55`):
 ```bash
 
-$ python bars.py # possibly requires call of python3 executive instead of just python
-# FIXME вывести пример ответа скрипта
+~$ python3.6 3_bars/bars.py 3_bars/bars.json closest 37 55
+{'geometry': {'coordinates': [36.900000000253, 55.303299999814], 'type': 'Point', 'distance_from_me': 0.31936012562086225}, 'properties': {'DatasetId': 1796, 'VersionNumber': 2, 'ReleaseNumber': 2, 'RowId': 'bb9eb30d-d16b-4821-8d9c-894b581ac762', 'Attributes': {'global_id': 281494712, 'Name': 'Staropramen', 'IsNetObject': 'нет', 'OperatingCompany': None, 'AdmArea': 'Центральный административный округ', 'District': 'Красносельский район', 'Address': 'Садовая-Спасская улица, дом 19, корпус 1', 'PublicPhone': [{'PublicPhone': '(985) 069-34-47'}], 'SeatsCount': 50, 'SocialPrivileges': 'нет'}}, 'type': 'Feature'}
 
 ```
 
