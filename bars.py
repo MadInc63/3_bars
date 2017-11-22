@@ -1,48 +1,51 @@
 import json
-import sys
+import argparse
 from math import sqrt
 
 
-def load_from_json_file(file_path):
-    try:
-        with open(file_path, 'r') as json_file:
-            result_of_load = json.loads(json_file.read())
-    except IOError:
-        print('No such file or directory')
-    except ValueError:
-        print('File is empty')
-    else:
-        return result_of_load
+def load_data(file_path):
+    with open(file_path, 'r') as json_file:
+        return json.load(json_file)
 
 
 def get_biggest_bar(json_data):
-    print(max(json_data['features'], key=lambda count:
-          count['properties']['Attributes']['SeatsCount']))
+    return max(json_data['features'], key=lambda count:
+               count['properties']['Attributes']['SeatsCount'])
 
 
 def get_smallest_bar(json_data):
-    print(min(json_data['features'], key=lambda count:
-          count['properties']['Attributes']['SeatsCount']))
+    return min(json_data['features'], key=lambda count:
+               count['properties']['Attributes']['SeatsCount'])
 
 
-def get_closest_bar(json_data, my_place_longitude, my_place_latitude):
-    for bars in json_data['features']:
-        bar_longitude = bars['geometry']['coordinates'][0]
-        bar_latitude = bars['geometry']['coordinates'][1]
-        distance_from_my_place = (sqrt((bar_longitude -
-                                        float(my_place_longitude))**2 +
-                                       (bar_latitude -
-                                        float(my_place_latitude))**2))
-        bars['geometry'].update({'distance_from_me': distance_from_my_place})
-    print(min(json_data['features'], key=lambda count:
-          count['geometry']['distance_from_me']))
+def get_closest_bar(json_data, longitude, latitude):
+    return (min(json_data['features'], key=lambda bar: sqrt(
+                (float(longitude)-bar['geometry']['coordinates'][0])**2 +
+                (float(latitude)-bar['geometry']['coordinates'][1])**2)))
+
+
+def print_bar_info(bar):
+    print('Bar name: {name}\nAddress: {address}'
+          .format(name=bar['properties']['Attributes']['Name'],
+                  address=bar['properties']['Attributes']['Address']))
 
 
 if __name__ == '__main__':
-    if sys.argv[1] == 'max':
-        get_biggest_bar(load_from_json_file(sys.argv[2]))
-    elif sys.argv[1] == 'min':
-        get_smallest_bar(load_from_json_file(sys.argv[2]))
-    elif sys.argv[1] == 'closest':
-        get_closest_bar(load_from_json_file(sys.argv[4]),
-                        sys.argv[2], sys.argv[3])
+    parser = argparse.ArgumentParser()
+    parser.add_argument('path', type=str,
+                        help='path to file JSON format')
+    args = parser.parse_args()
+    print_bar_info(get_biggest_bar(load_data(args.path)))
+
+#    try:
+#        file_to_path = sys.argv[1]
+#        bars_list = load_data(file_to_path)
+#        print_bar_info(get_biggest_bar(bars_list))
+#        print_bar_info(get_smallest_bar(bars_list))
+#        print_bar_info(get_closest_bar(bars_list, sys.argv[3], sys.argv[4]))
+#    except IndexError:
+#        print("You must enter a path to data file.")
+#    except OSError:
+#        print("{} - File not found.".format(sys.argv[1]))
+#    except ValueError:
+#        print("You must enter valid coordinates values.")
