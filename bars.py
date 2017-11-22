@@ -32,9 +32,9 @@ def get_smallest_bar(json_data):
 
 
 def get_closest_bar(json_data, longitude, latitude):
-    return (min(json_data['features'], key=lambda bar: sqrt(
-                (float(longitude)-bar['geometry']['coordinates'][0])**2 +
-                (float(latitude)-bar['geometry']['coordinates'][1])**2)))
+    return min(json_data['features'], key=lambda bar: sqrt(
+               (float(longitude)-bar['geometry']['coordinates'][0])**2 +
+               (float(latitude)-bar['geometry']['coordinates'][1])**2))
 
 
 def print_bar_info(bar):
