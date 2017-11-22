@@ -3,9 +3,22 @@ import argparse
 from math import sqrt
 
 
+def creat_parser():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('path', type=str, help='path to file JSON format')
+    subparsers = parser.add_subparsers(dest='command')
+    biggest_parser = subparsers.add_parser('biggest')
+    smallest_parser = subparsers.add_parser('smallest')
+    closest_parser = subparsers.add_parser('closest')
+    closest_parser.add_argument('longitude', help='my place longitude')
+    closest_parser.add_argument('latitude', help='my place latitude')
+    return parser.parse_args()
+
+
 def load_data(file_path):
-    with open(file_path, 'r') as json_file:
-        return json.load(json_file)
+    with open(file_path, 'r', encoding="utf-8") as json_file:
+        json_data = json.load(json_file)
+        return json_data
 
 
 def get_biggest_bar(json_data):
@@ -31,21 +44,12 @@ def print_bar_info(bar):
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser()
-    parser.add_argument('path', type=str,
-                        help='path to file JSON format')
-    args = parser.parse_args()
-    print_bar_info(get_biggest_bar(load_data(args.path)))
-
-#    try:
-#        file_to_path = sys.argv[1]
-#        bars_list = load_data(file_to_path)
-#        print_bar_info(get_biggest_bar(bars_list))
-#        print_bar_info(get_smallest_bar(bars_list))
-#        print_bar_info(get_closest_bar(bars_list, sys.argv[3], sys.argv[4]))
-#    except IndexError:
-#        print("You must enter a path to data file.")
-#    except OSError:
-#        print("{} - File not found.".format(sys.argv[1]))
-#    except ValueError:
-#        print("You must enter valid coordinates values.")
+    path_to_file = creat_parser().path
+    bars_dict = load_data(path_to_file)
+    if creat_parser().command == 'biggest':
+        print_bar_info(get_biggest_bar(bars_dict))
+    elif creat_parser().command == 'smallest':
+        print_bar_info(get_smallest_bar(bars_dict))
+    elif creat_parser().command == 'closest':
+        print_bar_info(get_closest_bar(bars_dict, creat_parser().longitude,
+                                       creat_parser().latitude))
