@@ -3,15 +3,17 @@ import argparse
 from math import sqrt
 
 
-def creat_parser():
+def create_parser():
     parser = argparse.ArgumentParser()
     parser.add_argument('path', type=str, help='path to file JSON format')
     subparsers = parser.add_subparsers(dest='command')
-    biggest_parser = subparsers.add_parser('biggest')
-    smallest_parser = subparsers.add_parser('smallest')
+    subparsers.add_parser('biggest')
+    subparsers.add_parser('smallest')
     closest_parser = subparsers.add_parser('closest')
-    closest_parser.add_argument('longitude', help='my place longitude')
-    closest_parser.add_argument('latitude', help='my place latitude')
+    closest_parser.add_argument('longitude', type=float,
+                                help='my place longitude')
+    closest_parser.add_argument('latitude', type=float,
+                                help='my place latitude')
     return parser.parse_args()
 
 
@@ -44,12 +46,13 @@ def print_bar_info(bar):
 
 
 if __name__ == '__main__':
-    path_to_file = creat_parser().path
+    parser = create_parser()
+    path_to_file = parser.path
     bars_dict = load_data(path_to_file)
-    if creat_parser().command == 'biggest':
+    if parser.command == 'biggest':
         print_bar_info(get_biggest_bar(bars_dict))
-    elif creat_parser().command == 'smallest':
+    elif parser.command == 'smallest':
         print_bar_info(get_smallest_bar(bars_dict))
-    elif creat_parser().command == 'closest':
-        print_bar_info(get_closest_bar(bars_dict, creat_parser().longitude,
-                                       creat_parser().latitude))
+    elif parser.command == 'closest':
+        print_bar_info(get_closest_bar(bars_dict, parser.longitude,
+                                       parser.latitude))
