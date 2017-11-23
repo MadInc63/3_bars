@@ -56,3 +56,4 @@ if __name__ == '__main__':
     elif parser.command == 'closest':
         print_bar_info(get_closest_bar(bars_dict, parser.longitude,
                                        parser.latitude))
+ 
